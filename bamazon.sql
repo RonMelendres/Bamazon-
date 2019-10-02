@@ -14,9 +14,6 @@ CREATE TABLE products (
 );
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Bicycle", "Random", 10000000000, 1);
-
-INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Iron Sword", "Swords", 600, 50);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
@@ -42,3 +39,6 @@ VALUES ("Steel Axe", "Axes", 950, 25);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Silver Axe", "Axes", 1400, 5);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("Bicycle", "Random", 10000000000, 1);
