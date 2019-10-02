@@ -10,47 +10,33 @@ var connection = mysql.createConnection({
     database: "BamazonDB"
 });
 
-connection.connect(function(err,) {
-    if(err) throw err;
+connection.connect(function (err, ) {
+    if (err) throw err;
     console.log("connected as id " + connection.threadId);
     afterConnection();
 });
 
 function afterConnection() {
-    connection.query("SELECT * FROM products", function(err, res) {
-        if(err) throw(err);
-        console.log(res);
-        connection.end();
-    });
-    var table = new Table({
-        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-             , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-             , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-             , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
-    });
-     
-    // table is an Array, so you can `push`, `unshift`, `splice` and friends
-    table.push(
-        ['Item ID', 'Product Name', 'Department Name', 'Price', 'Stock Quantity']
-      , [1, 'Iron Sword', 'Swords', 600, 50]
-      , [2, 'Steel Sword', 'Swords', 1050, 25]
-    );
-     
-    console.log(table.toString());
-}
+    connection.query("SELECT * FROM products", function (err, res) {
+        console.log(res)
+        var table = new Table({
+            chars: {
+                'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
+                , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
+                , 'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼'
+                , 'right': '║', 'right-mid': '╢', 'middle': '│'
+            }
+        });
 
-// var table = new Table({
-//     chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-//          , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-//          , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-//          , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
-// });
- 
-// // table is an Array, so you can `push`, `unshift`, `splice` and friends
-// table.push(
-//     ['Item ID', 'Product Name', 'Department Name', 'Price', 'Stock Quantity']
-//   , [1, 'Iron Sword', 'Swords', 600, 50]
-//   , [2, 'Steel Sword', 'Swords', 1050, 25]
-// );
- 
-// console.log(table.toString());
+        table.push(
+            ['Item ID', 'Product Name', 'Department Name', 'Price', 'Stock Quantity']
+        )
+        for (var i = 0; i < res.length; i++) {
+            table.push(
+                [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+            );
+
+        };
+        console.log(table.toString());
+    })
+}
