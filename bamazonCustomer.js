@@ -36,27 +36,54 @@ function afterConnection() {
             table.push(
                 [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
             );
-
         };
+        // firstQuestion();
         // console.log('im done querying')
         console.log(table.toString());
-        inquirer
-            .prompt([
+    })
+}
 
+function questions() {
+    inquirer
+        .prompt([
+
+            {
+                name: "userChoice1",
+                type: "list",
+                message: "Hello! Welcome to Bamazon Armoury. Which item would you like? (Please select the Item ID)\n",
+                choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            },
+
+        ]).then(function () {
+            inquirer.prompt([
                 {
-                    name: "introQuestion",
-                    type: "number",
-                    message: "Hello! Welcome to Bamazon Armoury. Which item would you like? (Please select the Item ID)\n\n",
-                },
-                {
-                    name: "howMuchQuestion",
+                    name: "quantity",
                     type: "number",
                     message: "How many would you like?",
                 }
+                
             ])
-    })
 
-}
+        })
+
+
+};
+
+questions();
+
+
+
+
+
+
+
+
+// {
+            //     name: "howMuchQuestion",
+            //     type: "number",
+            //     message: "How many would you like?",
+            // }
+
 
 /*
  synchronous vs asynchronous
