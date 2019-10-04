@@ -36,7 +36,6 @@ function afterConnection() {
             table.push(
                 [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
             );
-
         };
 
         console.log(table.toString());
@@ -52,8 +51,8 @@ function questions() {
                 name: "userChoice1",
                 type: "number",
                 message: "Hello! Welcome to Bamazon Armoury. Which item would you like? (Please select the Item ID)\n",
-                validate: function(value) {
-                    if(isNaN(value) === false) {
+                validate: function (value) {
+                    if (isNaN(value) === false) {
                         return true;
                     }
                     return false;
@@ -64,34 +63,60 @@ function questions() {
         .then(function (userInput) {
             var query = "SELECT item_id FROM products";
             connection.query(query, { userChoice1: userInput.userChoice1 }, function (err, res) {
-                // console.log(res[i].item_id);
+
                 for (var i = 0; i < res.length; i++) {
-                    
                     if (userInput.userChoice1 === res[i].item_id) {
                         inquirer.prompt([
                             {
                                 name: "quantity",
                                 type: "number",
                                 message: "How many would you like?",
+                                validate: function (value) {
+                                    if (isNaN(value) === false) {
+                                        return true;
+                                    }
+                                    return false;
+                                }
                             },
-                            // updateQuantity()
+
                         ])
+                            .then(function (userQuantity) {
+                                updateQuantity(userInput.userChoice1, userQuantity.quantity)
+                            });
                     }
                 }
             })
         });
 }
 
-// function updateQuantity() {
-//     var query = connection.query(
-//         "UPDATE products SET ? WHERE stock_quantity",
-//         [
-//             {
-//                 quantity:[]
-//             },
-//         ]
-//     )
-// }
+function updateQuantity(product_id, product_quantity) {
+    connection.query("SELECT * FROM products WHERE item_id =?", [product_id],
+        function (err, res) {
+            if (err) throw err;
+            if (product_quantity > res[0].stock_quantity) {
+                console.log("There is not enough products")
+                afterConnection()
+            }
+            else {
+
+                var newQuantity = res[0].stock_quantity - product_quantity
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: newQuantity
+                        },
+                        {
+                            item_id: product_id
+                        }
+                    ]
+                )
+                afterConnection()
+                // console.log(query.sql);
+            }
+        })
+
+}
 
 /*
  synchronous vs asynchronous
