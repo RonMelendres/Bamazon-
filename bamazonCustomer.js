@@ -17,7 +17,7 @@ connection.connect(function (err, ) {
 });
 
 function afterConnection() {
-    //connection.query === ASYNC (runner 1)
+    
     connection.query("SELECT * FROM products", function (err, res) {
 
         var table = new Table({
@@ -50,11 +50,14 @@ function questions() {
             {
                 name: "userChoice1",
                 type: "number",
-                message: "Hello! Welcome to Bamazon Armoury. Which item would you like? (Please select the Item ID)\n",
+                message: "Welcome to Bamazon! Which item would you like? (Please select the Item ID)\n",
                 validate: function (value) {
                     if (isNaN(value) === false) {
                         return true;
+
                     }
+                    // console.log("Please choose the appropriate ID");
+                    // afterConnection()
                     return false;
                 }
             },
@@ -84,7 +87,11 @@ function questions() {
                                 updateQuantity(userInput.userChoice1, userQuantity.quantity)
                             });
                     }
-                }
+                    // else  {
+                    //     console.log("There is not enough products")
+                    //     afterConnection()
+                    // }
+                };
             })
         });
 }
@@ -111,17 +118,10 @@ function updateQuantity(product_id, product_quantity) {
                         }
                     ]
                 )
+                console.log("Purchased " + product_quantity)
                 afterConnection()
-                // console.log(query.sql);
+               
             }
         })
 
 }
-
-/*
- synchronous vs asynchronous
- synchronous = in order
- asynchronous = things happen at the same time
-*/
-
-
