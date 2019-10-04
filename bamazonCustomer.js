@@ -19,7 +19,7 @@ connection.connect(function (err, ) {
 function afterConnection() {
     //connection.query === ASYNC (runner 1)
     connection.query("SELECT * FROM products", function (err, res) {
-        // console.log(res)
+
         var table = new Table({
             chars: {
                 'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
@@ -36,10 +36,11 @@ function afterConnection() {
             table.push(
                 [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
             );
+
         };
-        // firstQuestion();
-        // console.log('im done querying')
+
         console.log(table.toString());
+        questions();
     })
 }
 
@@ -49,41 +50,48 @@ function questions() {
 
             {
                 name: "userChoice1",
-                type: "list",
+                type: "number",
                 message: "Hello! Welcome to Bamazon Armoury. Which item would you like? (Please select the Item ID)\n",
-                choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                validate: function(value) {
+                    if(isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
             },
 
-        ]).then(function () {
-            inquirer.prompt([
-                {
-                    name: "quantity",
-                    type: "number",
-                    message: "How many would you like?",
+        ])
+        .then(function (userInput) {
+            var query = "SELECT item_id FROM products";
+            connection.query(query, { userChoice1: userInput.userChoice1 }, function (err, res) {
+                // console.log(res[i].item_id);
+                for (var i = 0; i < res.length; i++) {
+                    
+                    if (userInput.userChoice1 === res[i].item_id) {
+                        inquirer.prompt([
+                            {
+                                name: "quantity",
+                                type: "number",
+                                message: "How many would you like?",
+                            },
+                            // updateQuantity()
+                        ])
+                    }
                 }
-                
-            ])
+            })
+        });
+}
 
-        })
-
-
-};
-
-questions();
-
-
-
-
-
-
-
-
-// {
-            //     name: "howMuchQuestion",
-            //     type: "number",
-            //     message: "How many would you like?",
-            // }
-
+// function updateQuantity() {
+//     var query = connection.query(
+//         "UPDATE products SET ? WHERE stock_quantity",
+//         [
+//             {
+//                 quantity:[]
+//             },
+//         ]
+//     )
+// }
 
 /*
  synchronous vs asynchronous
